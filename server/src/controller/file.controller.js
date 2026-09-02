@@ -8,7 +8,7 @@ import dataGroup from "../core/QueueManager.js";
 function fileUpload(req, res) {
     //console.log('inside fileUpload controller')
     // 1. Validate the user session
-    let userId = req.cookies.userId;
+    let userId = req.cookies.userId || req.headers['x-user-id'];
 
     if (!userId || !dataGroup.hasUser(userId)) {
         // 3. Send the cookie back to the frontend if user not registered
@@ -17,7 +17,7 @@ function fileUpload(req, res) {
         res.cookie('userId', userId, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
+            sameSite: 'none',
             maxAge: 365 * 24 * 60 * 60 * 1000 // Expires in 1 year
         });
 

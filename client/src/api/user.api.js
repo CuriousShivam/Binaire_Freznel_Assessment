@@ -6,6 +6,9 @@ const initializeSession = async () => {
 
         // The browser will automatically attach the cookie if it exists
         response = await apiClient.get('/api/user/init-user');
+
+        // Saving Userid in local storage
+        localStorage.setItem('userId', response.data.userId);
         console.log('Session status:', response.data.message);
 
         // If it was a new user, the browser just automatically saved

@@ -18,7 +18,8 @@ const uploadFile = async (files, priority) => {
         // 3. Make your backend REST API network call
         response = await apiClient.post('/api/file/upload-files', formData, {
             headers: {
-                'Content-Type': 'multipart/form-data' // sets 'multipart/form-data' header with correct boundary
+                'Content-Type': 'multipart/form-data', // sets 'multipart/form-data' header with correct boundary
+                'x-user-id': localStorage.getItem('userId')
             }
         });
 
