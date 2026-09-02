@@ -4,34 +4,44 @@ import dataGroup from "../core/QueueManager.js";
 // Initialize User
 const initUser = async (req, res) => {
 
-    // 1. Check if the frontend sent a cookie
-    let userId = req.cookies.userId;
+    // Check if the frontend sent a cookie
+
+    // Return success response
+    return res.status(200).json({
+        success: true,
+        message: req?.isNewUser ? 'New user registered' : 'Existing user recognized',
+        userId:  req?.userId
+    });
+}
+
+function ensureUserSession(req, res, next) {
+    // Extract or create user id
+    console.log('ensuring user session');
+    let userId = req.cookies.userId || req.headers['x-user-id'];
     let isNewUser = false;
 
-    // 2. If no cookie, OR the user isn't in our active memory, enroll them
     if (!userId || !dataGroup.hasUser(userId)) {
         userId = uuidv4();
         dataGroup.registerUser(userId);
         isNewUser = true;
+        res.cookie('userId', userId, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 365 * 24 * 60 * 60 * 1000
+        });
+
+        res.set({
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+        });
     }
 
-    // 3. Send the cookie back to the frontend
-    res.cookie('userId', userId, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 365 * 24 * 60 * 60 * 1000 // Expires in 1 year
-    });
-    res.set({
-        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate', 'Pragma': 'no-cache', 'Expires': '0',
-    });
+    req.userId = userId;
+    req.isNewUser = isNewUser;
 
-    // 4. Return success response
-    return res.status(200).json({
-        success: true,
-        message: isNewUser ? 'New user registered' : 'Existing user recognized',
-        userId: userId
-    });
+    next();
 }
 
-export {initUser};
+export {initUser, ensureUserSession};

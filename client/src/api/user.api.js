@@ -9,7 +9,7 @@ const initializeSession = async () => {
 
         // Saving Userid in local storage
         localStorage.setItem('userId', response.data.userId);
-        console.log('Session status:', response.data.message);
+        //console.log('Session status:', response.data.message);
 
         // If it was a new user, the browser just automatically saved
         // the new cookie from the response headers!

@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import userRouter from './routes/user.routes.js';
 import fileRouter from './routes/file.routes.js';
 import responseStructure from './utils/responseStructure.js';
+import {ensureUserSession} from "./controller/user.controller.js";
 
 //import { generateCsv } from './core/generateCsv.js';
 
@@ -27,6 +28,7 @@ console.log(process.env.CLIENT_BASE_URL || 'http://localhost:3000')
 app.use(express.json());
 app.use(cookieParser());
 app.use(responseStructure);
+app.use(ensureUserSession);
 app.use('/api/user', userRouter);
 app.use('/api/file', fileRouter);
 

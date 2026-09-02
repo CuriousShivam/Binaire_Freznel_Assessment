@@ -7,26 +7,8 @@ import dataGroup from "../core/QueueManager.js";
 
 function fileUpload(req, res) {
     //console.log('inside fileUpload controller')
-    // 1. Validate the user session
-    let userId = req.cookies.userId || req.headers['x-user-id'];
 
-    if (!userId || !dataGroup.hasUser(userId)) {
-        // 3. Send the cookie back to the frontend if user not registered
-        userId = uuidv4();
-        dataGroup.registerUser(userId);
-        res.cookie('userId', userId, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'none',
-            maxAge: 365 * 24 * 60 * 60 * 1000 // Expires in 1 year
-        });
-
-        res.set({
-            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate', 'Pragma': 'no-cache', 'Expires': '0',
-        });
-    }
-
-    // 2. Validate files exist
+    // Validate files exist
     if (!req.files || req.files.length === 0) {
         return res.error('No files were uploaded.', 404);
     }
@@ -41,7 +23,7 @@ function fileUpload(req, res) {
         const filePath = file.path; // Absolute path on the server
 
         // Instantiate the Task (Status defaults to 'uploaded' inside the constructor)
-        const task = new Task(taskId, userId, file.originalname, filePath, priority);
+        const task = new Task(taskId, req.userId, file.originalname, filePath, priority);
 
         // Save to our DataGroup (Memory mapping)
         dataGroup.addTask(task);
@@ -55,8 +37,8 @@ function fileUpload(req, res) {
 }
 
 function getUploadedFilesByUserId(req, res){
-    if ( dataGroup.hasUser(req.cookies.userId)) {
-        const tasks = dataGroup.getUserTasks(req.cookies.userId)
+    if ( dataGroup.hasUser(req.userId)) {
+        const tasks = dataGroup.getUserTasks(req.userId)
         const cleanedTasks = tasks.map(({ id, fileName,priority,status, progress,resultSum }) => ({ id, fileName,priority,status, progress,resultSum }));
 
         //console.log(cleanedTasks);
