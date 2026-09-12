@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser';
 import userRouter from './routes/user.routes.js';
 import fileRouter from './routes/file.routes.js';
 import responseStructure from './utils/responseStructure.js';
-import {ensureUserSession} from "./controller/user.controller.js";
+import {ensureUserSession} from "./service/user.controller.js";
 
 //import { generateCsv } from './core/generateCsv.js';
 
@@ -24,7 +24,7 @@ app.use(cors(
         credentials: true
     }));
 
-console.log(process.env.CLIENT_BASE_URL || 'http://localhost:3000')
+console.log("Allowed Frontend Base Url: " , process.env.CLIENT_BASE_URL || 'http://localhost:3000');
 app.use(express.json());
 app.use(cookieParser());
 app.use(responseStructure);

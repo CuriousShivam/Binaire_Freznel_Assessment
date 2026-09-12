@@ -8,7 +8,8 @@ const initializeSession = async () => {
         response = await apiClient.get('/api/user/init-user');
 
         // Saving Userid in local storage
-        localStorage.setItem('userId', response.data.userId);
+        // console.log("/init-user: " ,response.data.data.userId)
+        localStorage.setItem('userId', response.data.data.userId);
         //console.log('Session status:', response.data.message);
 
         // If it was a new user, the browser just automatically saved

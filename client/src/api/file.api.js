@@ -34,7 +34,8 @@ const getFiles = async () => {
     try {
         // The browser will automatically attach the cookie if it exists
         response = await apiClient.get('/api/file/getFiles');
-        // console.log('Session status:', response.data.message);
+        // console.log('Get Files Response:', response.data.data.userId);
+        localStorage.setItem('userId', response.data.data.userId);
 
         // If it was a new user, the backend just automatically saved new user and sent
         // the new cookie from the response headers!

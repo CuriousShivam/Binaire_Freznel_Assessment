@@ -1,5 +1,5 @@
 import express from 'express';
-import {fileUpload, getUploadedFilesByUserId} from '../controller/file.controller.js';
+import {fileUpload, getUploadedFilesByUserId} from '../service/file.controller.js';
 import multer from "multer";
 import path from 'path';
 import fs from 'fs';

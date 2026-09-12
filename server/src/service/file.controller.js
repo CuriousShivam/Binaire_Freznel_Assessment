@@ -6,7 +6,7 @@ import dataGroup from "../core/QueueManager.js";
 
 
 function fileUpload(req, res) {
-    //console.log('inside fileUpload controller')
+    //console.log('inside fileUpload service')
 
     // Validate files exist
     if (!req.files || req.files.length === 0) {
@@ -42,7 +42,7 @@ function getUploadedFilesByUserId(req, res){
         const cleanedTasks = tasks.map(({ id, fileName,priority,status, progress,resultSum }) => ({ id, fileName,priority,status, progress,resultSum }));
 
         //console.log(cleanedTasks);
-        res.ok('Files successfully uploaded and queued.',cleanedTasks);
+        res.ok('Files successfully uploaded and queued.', {cleanedTasks, userId: req.userId});
     }
     else{
         res.error('User not found', 400);

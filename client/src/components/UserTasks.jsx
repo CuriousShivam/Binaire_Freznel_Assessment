@@ -10,7 +10,8 @@ export default function UserTasks(){
         try {
             const files = await getFiles();
 
-            setTasks(files?.data?.data);
+            setTasks(files?.data?.data.cleanedTasks);
+            // console.log(files?.data?.data.cleanedTasks);
             setIsLoading(false); // 3. Stop animation INSIDE the timeout
 
         } catch (error) {

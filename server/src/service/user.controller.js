@@ -7,18 +7,19 @@ const initUser = async (req, res) => {
     // Check if the frontend sent a cookie
 
     // Return success response
-    return res.status(200).json({
-        success: true,
-        message: req?.isNewUser ? 'New user registered' : 'Existing user recognized',
-        userId:  req?.userId
-    });
+    res.ok(  req?.isNewUser ? 'New user registered' : 'Existing user recognized',
+        {userId: req?.userId}
+    );
 }
 
 function ensureUserSession(req, res, next) {
     // Extract or create user id
-    console.log('ensuring user session');
-    let userId = req.cookies.userId || req.headers['x-user-id'];
+    // console.log("*****************************")
+    // console.log('Inside ensuring user session');
+    let userId =  req.headers['x-user-id'];
     let isNewUser = false;
+    // console.log("Payload's User Id: ",userId);
+    // console.log("User exists: ", dataGroup.hasUser(userId));
 
     if (!userId || !dataGroup.hasUser(userId)) {
         userId = uuidv4();
@@ -38,9 +39,12 @@ function ensureUserSession(req, res, next) {
         });
     }
 
+    // console.log("Final User Id: ",userId, ". Is new =" , isNewUser);
+    // console.log("All User ID's: " , dataGroup.activeUsers);
+    // console.log("*****************************")
+
     req.userId = userId;
     req.isNewUser = isNewUser;
-
     next();
 }
 
