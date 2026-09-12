@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser';
 import userRouter from './routes/user.routes.js';
 import fileRouter from './routes/file.routes.js';
 import responseStructure from './utils/responseStructure.js';
-import {ensureUserSession} from "./service/user.controller.js";
+import {ensureUserSession} from "./service/user.service.js";
 
 //import { generateCsv } from './core/generateCsv.js';
 
